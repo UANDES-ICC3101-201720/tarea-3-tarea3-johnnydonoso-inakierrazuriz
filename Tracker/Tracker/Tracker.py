@@ -1,5 +1,7 @@
 import socket
 import json
+import os
+
  
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -10,7 +12,10 @@ port = 12345
 
 s.bind((host,port))
 
-with open (r'C:\Users\usuario\source\repos\Megaupload\Megaupload\generated.json','r+') as file:
+dirname = os.path.dirname(__file__)
+filepath = os.path.join(dirname,'generated.json')
+
+with open (filepath,'r+') as file:
     datos = json.load(file)
 
 cont=0
@@ -46,10 +51,14 @@ while True:
             'ip': str(address[0]),
             'port': 12345,
             'disp': 'true' ,})
-        with open(r'C:\Users\usuario\source\repos\Megaupload\Megaupload\generated.json','w') as file:
+        with open(filepath,'w') as file:
             json.dump(datos,file)
         connection.send("[Tracker] Archivo subido correctamente".encode())
+    if(data1[0]=='adios'):
+        print("[Tracker] Adiós!!\n")
+        exit()
         
 
 connection.close()
     
+

@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Tracker", "Tracker\Tracker.pyproj", "{9FD2FA3F-E967-49FD-93E3-4DF2F3B09EA2}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Cliente", "Cliente\Cliente.pyproj", "{1542CE64-597D-4750-BDC1-7487C45D96E5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9FD2FA3F-E967-49FD-93E3-4DF2F3B09EA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FD2FA3F-E967-49FD-93E3-4DF2F3B09EA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1542CE64-597D-4750-BDC1-7487C45D96E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1542CE64-597D-4750-BDC1-7487C45D96E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CF780E11-44F1-4E42-B78A-186171F226C3}
+	EndGlobalSection
+EndGlobal

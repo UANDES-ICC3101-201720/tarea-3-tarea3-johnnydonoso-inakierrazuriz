@@ -14,7 +14,7 @@ print("[Client] Bienvenido al descargador de archivos")
 
 
 while True:
-    opcion = input("[Client]Seleccione la acción a realizar:\n1.- Buscar Archivo y Descargar\n2.- Subir Archivo\n")
+    opcion = input("[Client]Seleccione la acción a realizar:\n1.- Buscar Archivo y Descargar\n2.- Subir Archivo\n0.-To Exit\n")
     
     if(opcion=='1'):
         while True:
@@ -50,8 +50,6 @@ while True:
                         break
                     ip_a_descargar = ip_archivos[int(opcion_host)]
                     archivo_a_descargar = nombre_archivos[int(opcion_host)]
-
-                    break
             else:
                 print("No ingresó nada, ingrese nuevamente\n")
                 continue
@@ -79,12 +77,13 @@ while True:
         response = toServer.recv(1024)
         response_as_str = response.decode()
         print(response_as_str)
-
-
-        break
+    if(opcion == '0'):
+        print("Adiós!!\n")
+        toServer.send("adios".encode())
     else:
         print("[Client] Opción inválida, ingrésela nuevamente porfavor \n")
         continue
     break
 
 toServer.close()
+
