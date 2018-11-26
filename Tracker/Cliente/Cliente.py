@@ -1,17 +1,68 @@
-import socket               
+import socket  
+import threading
+import os
+
          
 host = socket.gethostname() 
 port = 12345  
 
-mis_Archivos = ["archivo1.txt","archivo2.txt","archivo3.txt"] #asumiremos que asi se pueden verificar los archivos en mi almacenamiento, ya que esto es un modelo
+mis_Archivos = ["archivo.txt","archivo2.txt","archivo3.txt"] #asumiremos que asi se pueden verificar los archivos en mi almacenamiento, ya que esto es un modelo
 
 print("[CLIENTE]\n")
 
 toServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 toServer.connect((host,port))
 
+path_folder = os.path.dirname(os.path.realpath(__file__))
+
 print("[Client] Bienvenido al descargador de archivos")
 
+def p2p_solicitud(file, ip):
+    s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    s.connect((ip,9999))
+    s.send(file.encode())
+    recibir(file,s)
+    s.close()
+
+def recibir(name_file,s):
+    file = open('(1)'+name_file,'w')
+    while True:
+        l = s.recv(256)
+        if("done" in l.decode()):
+            file.write(l.decode().replace("done",""))
+            break
+        else:
+            file.write(l.decode())
+        if l == None:
+            break
+   
+    file.close()
+
+def mandar(name_file, si):
+    file = open(path_folder+"\\"+name_file, 'rb')
+    content = file.readlines()
+    for con in content:
+        print("Enviado : "+con.decode())
+        si.send(con)
+    file.close()
+    si.send("done".encode())
+
+def client_server():
+    s_client = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    host_s = socket.gethostname()
+    port_s = 9999
+    s_client.bind(("0.0.0.0",port_s))
+    s_client.listen(5)
+    while True:
+        s_aux , address = s_client.accept()
+        name_file = s_aux.recv(1024).decode()
+        mandar(name_file,s_aux)
+        s_aux.close()
+
+
+        
+client_Server_t = threading.Thread(target = client_server)
+client_Server_t.start()
 
 while True:
     opcion = input("[Client]Seleccione la acción a realizar:\n1.- Buscar Archivo y Descargar\n2.- Subir Archivo\n0.-To Exit\n")
@@ -50,6 +101,8 @@ while True:
                         break
                     ip_a_descargar = ip_archivos[int(opcion_host)]
                     archivo_a_descargar = nombre_archivos[int(opcion_host)]
+                    p2p_solicitud(archivo_a_descargar,ip_a_descargar)
+                    print("[Client] Mandando solicitud al host elegido!")
             else:
                 print("No ingresó nada, ingrese nuevamente\n")
                 continue
@@ -77,6 +130,7 @@ while True:
         response = toServer.recv(1024)
         response_as_str = response.decode()
         print(response_as_str)
+
     if(opcion == '0'):
         print("Adiós!!\n")
         toServer.send("adios".encode())
