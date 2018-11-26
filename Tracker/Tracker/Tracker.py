@@ -19,7 +19,7 @@ with open (filepath,'r+') as file:
     datos = json.load(file)
 
 cont=0
-s.listen(5) 
+s.listen(10) 
 while True:
     connection, address = s.accept()
     print ('[Tracker]Got connection from', address)
@@ -43,7 +43,7 @@ while True:
     
         envio = archivos_a_enviar.encode()
         connection.send(envio)
-    if(data1[0]=='2'):
+    if (data1[0]=='2'):
         print("[Tracker]data recibida desde host = "+ str(data1[0])+","+str(data1[1]))
         print("[Tracker] subir archivos")
         datos['data'].append({
@@ -54,7 +54,7 @@ while True:
         with open(filepath,'w') as file:
             json.dump(datos,file)
         connection.send("[Tracker] Archivo subido correctamente".encode())
-    if(data1[0]=='adios'):
+    if (data1[0]=='adios'):
         exit()
         
 

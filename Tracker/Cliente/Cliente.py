@@ -25,14 +25,13 @@ def p2p_solicitud(file, ip):
     s.close()
 
 def recibir(name_file,s):
-    file = open('(1)'+name_file,'w')
+    file = open('(1)'+name_file,'wb')
     while True:
-        l = s.recv(256)
-        if("done" in l.decode()):
-            file.write(l.decode().replace("done",""))
+        l = s.recv(1024)
+        if not l:
             break
         else:
-            file.write(l.decode())
+            file.write(l)
         if l == None:
             break
    
@@ -40,12 +39,11 @@ def recibir(name_file,s):
 
 def mandar(name_file, si):
     file = open(path_folder+"\\"+name_file, 'rb')
-    content = file.readlines()
-    for con in content:
-        print("Enviado : "+con.decode())
-        si.send(con)
+    l = file.read(1024)
+    while l:
+        si.send(l)
+        l = file.read(1024)
     file.close()
-    si.send("done".encode())
 
 def client_server():
     s_client = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -65,7 +63,7 @@ client_Server_t = threading.Thread(target = client_server)
 client_Server_t.start()
 
 while True:
-    opcion = input("[Client]Seleccione la acción a realizar:\n1.- Buscar Archivo y Descargar\n2.- Subir Archivo\n0.-To Exit\n")
+    opcion = input("[Client]Seleccione la acción a realizar:\n1.- Buscar Archivo y Descargar\n2.- Subir Archivo\n0.- To Exit\n")
     
     if(opcion=='1'):
         while True:
@@ -79,6 +77,7 @@ while True:
 
                 if(response_as_str == '[Tracker] Archivo lamentablemente no encontrado en nuestras redes'):
                     print(response_as_str)
+                    continue
                 else:
                     palabras = response_as_str.split("|")
                     contador = 0
@@ -103,10 +102,13 @@ while True:
                     archivo_a_descargar = nombre_archivos[int(opcion_host)]
                     p2p_solicitud(archivo_a_descargar,ip_a_descargar)
                     print("[Client] Mandando solicitud al host elegido!")
+                    break
             else:
                 print("No ingresó nada, ingrese nuevamente\n")
                 continue
-            break
+        print("\n\n")
+        continue
+        
 
     if(opcion=='2'):
         print("[Client] Subir archivo\n")
@@ -130,14 +132,17 @@ while True:
         response = toServer.recv(1024)
         response_as_str = response.decode()
         print(response_as_str)
+        print("\n\n")
+        continue
 
     if(opcion == '0'):
         print("Adiós!!\n")
         toServer.send("adios".encode())
+        exit()
     else:
         print("[Client] Opción inválida, ingrésela nuevamente porfavor \n")
         continue
-    break
+    
 
 toServer.close()
 
