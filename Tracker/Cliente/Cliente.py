@@ -6,12 +6,10 @@ import os
 host = socket.gethostname() 
 port = 12345  
 
-mis_Archivos = ["archivo.txt","archivo2.txt","archivo3.txt"] #asumiremos que asi se pueden verificar los archivos en mi almacenamiento, ya que esto es un modelo
+mis_Archivos = ["archivo.txt","archivo2.txt","archivo3.txt","archivo4.txt"] #asumiremos que asi se pueden verificar los archivos en mi almacenamiento, ya que esto es un modelo
 
 print("[CLIENTE]\n")
 
-toServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-toServer.connect((host,port))
 
 path_folder = os.path.dirname(os.path.realpath(__file__))
 
@@ -34,7 +32,6 @@ def recibir(name_file,s):
             file.write(l)
         if l == None:
             break
-   
     file.close()
 
 def mandar(name_file, si):
@@ -57,12 +54,15 @@ def client_server():
         mandar(name_file,s_aux)
         s_aux.close()
 
-
         
 client_Server_t = threading.Thread(target = client_server)
 client_Server_t.start()
 
 while True:
+    toServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    toServer.connect((host,port))
+    
+
     opcion = input("[Client]Seleccione la acción a realizar:\n1.- Buscar Archivo y Descargar\n2.- Subir Archivo\n0.- To Exit\n")
     
     if(opcion=='1'):
@@ -101,7 +101,9 @@ while True:
                     ip_a_descargar = ip_archivos[int(opcion_host)]
                     archivo_a_descargar = nombre_archivos[int(opcion_host)]
                     p2p_solicitud(archivo_a_descargar,ip_a_descargar)
-                    print("[Client] Mandando solicitud al host elegido!")
+                    print("[Client] Mandando solicitud al host elegido!\n")
+                    print("[Client] Archivo Descargado exitosamente!!\n")
+
                     break
             else:
                 print("No ingresó nada, ingrese nuevamente\n")
@@ -137,12 +139,14 @@ while True:
 
     if(opcion == '0'):
         print("Adiós!!\n")
+        client_Server_t._delete()
         toServer.send("adios".encode())
         exit()
+        break
     else:
         print("[Client] Opción inválida, ingrésela nuevamente porfavor \n")
         continue
     
 
-toServer.close()
+
 

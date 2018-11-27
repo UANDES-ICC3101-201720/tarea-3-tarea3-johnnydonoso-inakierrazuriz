@@ -58,6 +58,5 @@ while True:
         exit()
         
 
-connection.close()
     
 
